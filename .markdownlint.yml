@@ -7,3 +7,6 @@ MD022: false
 MD032: false
 MD040: false
 MD060: false
+# سجل التغييرات يستخدم عناوين متكررة بنفس الاسم بين أقسام مختلفة (نمط قياسي).
+MD024:
+  siblings_only: true

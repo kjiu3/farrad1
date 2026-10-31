@@ -41,7 +41,6 @@ jobs:
 
   # اختبارات Flutter على الأنظمة الثلاثة (بداية من المرحلة 1 — فرع stage1/flutter-scaffold)
   flutter-test:
-    if: hashFiles('app/pubspec.yaml') != ''
     strategy:
       fail-fast: false
       matrix:
