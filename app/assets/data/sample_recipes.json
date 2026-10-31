@@ -1,0 +1,473 @@
+{
+  "notice": "بيانات نموذجية للمرحلة 2 — محتوى أصلي مكتوب خصيصًا لهذا المشروع بلا نسخ من أي منصة قائمة. تُستخدم في الاختبارات القياسية (20 وصفة) وتصلح كبذور مستقبلية في db/migrations.",
+  "recipes": [
+    {
+      "id": "s01",
+      "title": "كبسة دجاج بالبهارات",
+      "category": "main",
+      "difficulty": "medium",
+      "prepTimeMinutes": 75,
+      "baseServings": 6,
+      "ingredients": [
+        { "name": "أرز بسمتي", "amount": 3, "unit": "cup" },
+        { "name": "دجاج مقطع", "amount": 1, "unit": "kilogram" },
+        { "name": "بصل", "amount": 2, "unit": "piece" },
+        { "name": "طماطم", "amount": 3, "unit": "piece" },
+        { "name": "خلطة بهارات كبسة", "amount": 2, "unit": "tablespoon" },
+        { "name": "زيت نباتي", "amount": 4, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "شوّح البصل في الزيت حتى يصير ذهبيًا.",
+        "أضف الدجاج وقلّبه حتى يشوّى من كل الجهات.",
+        "أضف الطماطم والبهارات وماءً يغمر المكونات.",
+        "اطبخ على نار هادئة نصف ساعة حتى ينضج الدجاج.",
+        "أضف الأرز المغسول واتركه يغلي ثم هدّئ النار حتى يتشرب السائل.",
+        "قدّمه في صحن واسع مع سلطة خضراء."
+      ],
+      "createdAt": "2026-01-05T09:00:00Z",
+      "updatedAt": "2026-01-05T09:00:00Z"
+    },
+    {
+      "id": "s02",
+      "title": "شوربة عدس الحمراء",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "prepTimeMinutes": 35,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "عدس أحمر", "amount": 200, "unit": "gram" },
+        { "name": "بصل", "amount": 1, "unit": "piece" },
+        { "name": "جزر", "amount": 2, "unit": "piece" },
+        { "name": "كمون مطحون", "amount": 1, "unit": "teaspoon" },
+        { "name": "زيت زيتون", "amount": 2, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "اقلِ البصل في الزيت حتى يذبل.",
+        "أضف العدس المغسول والجزر المقطع وأربعة أكواب ماء.",
+        "اطبخ ربع ساعة حتى ينضج العدس والجزر.",
+        "أضف الكمون واضربها في الخلاط حتى تتماسك.",
+        "قدّمها بالليمون ويلفها زيت زيتون."
+      ],
+      "createdAt": "2026-01-07T09:00:00Z",
+      "updatedAt": "2026-01-07T09:00:00Z"
+    },
+    {
+      "id": "s03",
+      "title": "سلطة فتوش بالسماق",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "prepTimeMinutes": 15,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "خيار", "amount": 2, "unit": "piece" },
+        { "name": "طماطم", "amount": 3, "unit": "piece" },
+        { "name": "خس", "amount": 1, "unit": "piece" },
+        { "name": "خبز محمص", "amount": 1, "unit": "piece" },
+        { "name": "سماق", "amount": 1, "unit": "tablespoon" },
+        { "name": "زيت زيتون", "amount": 3, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "قطّع الخضار مكعبات متوسطة.",
+        "أضف الخبز المحمص المفطع.",
+        "انثر السماق مع الزيت والليمون وحرك حتى تمتزج.",
+        "قدّمها على المائدة فورًا قبل أن يلين الخبز."
+      ],
+      "createdAt": "2026-01-10T09:00:00Z",
+      "updatedAt": "2026-01-10T09:00:00Z"
+    },
+    {
+      "id": "s04",
+      "title": "حمص بالطحينة",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "prepTimeMinutes": 10,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "حمص مسلوق", "amount": 400, "unit": "gram" },
+        { "name": "طحينة سمسم", "amount": 4, "unit": "tablespoon" },
+        { "name": "ليمون", "amount": 1, "unit": "piece" },
+        { "name": "ثوم", "amount": 2, "unit": "piece" },
+        { "name": "زيت زيتون", "amount": 2, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "امزج الحمص والطحينة مع عصير الليمون.",
+        "أضف الثوم المبروش وماءً بقليل حتى يصبح قوام كريمي.",
+        "رتب في طبق واسحب خطًا من زيت الزيتون.",
+        "رش الكمون حسب الرغبة."
+      ],
+      "createdAt": "2026-01-12T09:00:00Z",
+      "updatedAt": "2026-01-12T09:00:00Z"
+    },
+    {
+      "id": "s05",
+      "title": "كشري مصري بالعدس",
+      "category": "main",
+      "difficulty": "medium",
+      "prepTimeMinutes": 60,
+      "baseServings": 5,
+      "ingredients": [
+        { "name": "أرز بسمتي", "amount": 2, "unit": "cup" },
+        { "name": "عدس بني", "amount": 200, "unit": "gram" },
+        { "name": "مكرونة صدفية", "amount": 300, "unit": "gram" },
+        { "name": "حمص مقشر", "amount": 100, "unit": "gram" },
+        { "name": "بصل", "amount": 3, "unit": "piece" },
+        { "name": "صلصة طماطم", "amount": 300, "unit": "milliliter" }
+      ],
+      "steps": [
+        "اسلق المكرونة والعدس كل منهما على حدة.",
+        "دقّق الأرز مع العدس وماءً وبهارًا حتى يتشرب.",
+        "حمرّ البصل بالزيت حتى يصير ذهبيًا.",
+        "صفّ المكونات في طبق واحد وصب الصلصة الساخنة.",
+        "أضف البصل المقرمش فوق الوجه."
+      ],
+      "createdAt": "2026-01-15T09:00:00Z",
+      "updatedAt": "2026-01-15T09:00:00Z"
+    },
+    {
+      "id": "s06",
+      "title": "مسقعة باذنجان باللحم",
+      "category": "main",
+      "difficulty": "medium",
+      "prepTimeMinutes": 55,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "باذنجان", "amount": 2, "unit": "kilogram" },
+        { "name": "بصل", "amount": 2, "unit": "piece" },
+        { "name": "طماطم", "amount": 5, "unit": "piece" },
+        { "name": "لحم مفري", "amount": 300, "unit": "gram" },
+        { "name": "زيت للقلي", "amount": 500, "unit": "milliliter" }
+      ],
+      "steps": [
+        "قشر الباذنجان واقله حتى يتلين.",
+        "شوّح البصل واللحم حتى ينضج اللحم.",
+        "صفّ الطبقات من الباذنجان والحمّة والصلصة.",
+        "أدخله فرنًا متوسطًا ربع ساعة.",
+        "قدّمه باردًا أو ساخنًا."
+      ],
+      "createdAt": "2026-01-18T09:00:00Z",
+      "updatedAt": "2026-01-18T09:00:00Z"
+    },
+    {
+      "id": "s07",
+      "title": "طاجين دجاج بالزيتون",
+      "category": "main",
+      "difficulty": "hard",
+      "prepTimeMinutes": 90,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "دجاج مقطع", "amount": 1.2, "unit": "kilogram" },
+        { "name": "زيتون أخضر", "amount": 200, "unit": "gram" },
+        { "name": "ليمون مخلل", "amount": 2, "unit": "piece" },
+        { "name": "زعفران", "amount": 1, "unit": "teaspoon" },
+        { "name": "بصل", "amount": 2, "unit": "piece" },
+        { "name": "كزبرة مطحونة", "amount": 1, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "تبل الدجاج بالزعفران والكزبرة وماءً وبهارًا.",
+        "أدخله طاجينًا مع بواقي البصل.",
+        "اطبخه على حرارة هادئة ساعة كاملة.",
+        "أضف الزيتون والليمون واصلاحه ربع ساعة.",
+        "قدّمه بالخبز الصغير."
+      ],
+      "createdAt": "2026-01-20T09:00:00Z",
+      "updatedAt": "2026-01-20T09:00:00Z"
+    },
+    {
+      "id": "s08",
+      "title": "كفتة بالصينية",
+      "category": "main",
+      "difficulty": "medium",
+      "prepTimeMinutes": 45,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "لحم مفري", "amount": 600, "unit": "gram" },
+        { "name": "بقدونس", "amount": 50, "unit": "gram" },
+        { "name": "بصل", "amount": 1, "unit": "piece" },
+        { "name": "بهار عربي", "amount": 1, "unit": "tablespoon" },
+        { "name": "طماطم شرائح", "amount": 2, "unit": "piece" }
+      ],
+      "steps": [
+        "اخلط اللحم مع البصل والبقدونس والبهار.",
+        "شكّل أصابع رفيعة على الصينية.",
+        "صف رقائق الطماطم بين كل صف.",
+        "ادخلها فرنًا حتى ترطب الروائح ربع ساعة.",
+        "قدّمه مع اللبن بالخيار."
+      ],
+      "createdAt": "2026-01-22T09:00:00Z",
+      "updatedAt": "2026-01-22T09:00:00Z"
+    },
+    {
+      "id": "s09",
+      "title": "محاشي كوسة بالصلصة",
+      "category": "main",
+      "difficulty": "hard",
+      "prepTimeMinutes": 80,
+      "baseServings": 6,
+      "ingredients": [
+        { "name": "كوسة", "amount": 12, "unit": "piece" },
+        { "name": "أرز مغسول", "amount": 1.5, "unit": "cup" },
+        { "name": "لحم مفري", "amount": 300, "unit": "gram" },
+        { "name": "طماطم", "amount": 4, "unit": "piece" },
+        { "name": "نعنع مجفف", "amount": 1, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "فرّغ الكوسة بطرفها باحتراف.",
+        "امزج الأرز المغسول مع اللحم والطماطم.",
+        "املأ كل كوسة بثلثي حجمها.",
+        "رتبها في القدر وصب الصلصة الحمراء والماء.",
+        "اطبخها نصف ساعة حتى تمام النضج."
+      ],
+      "createdAt": "2026-01-25T09:00:00Z",
+      "updatedAt": "2026-01-25T09:00:00Z"
+    },
+    {
+      "id": "s10",
+      "title": "شكشوكة بيض بالطماطم",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "prepTimeMinutes": 20,
+      "baseServings": 2,
+      "ingredients": [
+        { "name": "بيض", "amount": 4, "unit": "piece" },
+        { "name": "طماطم", "amount": 3, "unit": "piece" },
+        { "name": "فلفل أخضر", "amount": 1, "unit": "piece" },
+        { "name": "ثوم", "amount": 2, "unit": "piece" },
+        { "name": "زيت زيتون", "amount": 2, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "شوّح الطماطم والفلفل مع الثوم.",
+        "تركها حتى تتالق وتتكون.",
+        "انزلقات البيض عليها ولها.",
+        "قدّمها بالخبز الطازج."
+      ],
+      "createdAt": "2026-01-28T09:00:00Z",
+      "updatedAt": "2026-01-28T09:00:00Z"
+    },
+    {
+      "id": "s11",
+      "title": "شاورما دجاج بيتية",
+      "category": "main",
+      "difficulty": "medium",
+      "prepTimeMinutes": 55,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "دجاج شرائح", "amount": 800, "unit": "gram" },
+        { "name": "لبن كامل", "amount": 150, "unit": "milliliter" },
+        { "name": "خل", "amount": 3, "unit": "tablespoon" },
+        { "name": "بطاطة مقطعة", "amount": 2, "unit": "piece" },
+        { "name": "خبز عربي", "amount": 4, "unit": "piece" },
+        { "name": "ثوم", "amount": 3, "unit": "piece" }
+      ],
+      "steps": [
+        "تبل الدجاج باللبن والخل والثوم قبل ساعات.",
+        "قلِّه في مقلاة ساخنة حتى يتشوى.",
+        "قطّعه شرائح رفيعة وضعه في الخبز.",
+        "أضف البطاطا المقزرة والسلطة والصوص.",
+        "لفه وضعه على حرارة منخفضة ربع ساعة."
+      ],
+      "createdAt": "2026-02-01T09:00:00Z",
+      "updatedAt": "2026-02-01T09:00:00Z"
+    },
+    {
+      "id": "s12",
+      "title": "بطاطة مقليّة بالكزبرة",
+      "category": "appetizer",
+      "difficulty": "easy",
+      "prepTimeMinutes": 20,
+      "baseServings": 3,
+      "ingredients": [
+        { "name": "بطاطة", "amount": 3, "unit": "piece" },
+        { "name": "زيت للقلي", "amount": 300, "unit": "milliliter" },
+        { "name": "كزبرة مطحونة", "amount": 1, "unit": "teaspoon" }
+      ],
+      "steps": [
+        "قطّع البطاطة شرائح متوسطة.",
+        "اقله في زيت ساخن حتى يصير ذهبيًا.",
+        "رش الكزبرة والملح عند الخروج فورًا."
+      ],
+      "createdAt": "2026-02-03T09:00:00Z",
+      "updatedAt": "2026-02-03T09:00:00Z"
+    },
+    {
+      "id": "s13",
+      "title": "كعك بالسمسم",
+      "category": "baked",
+      "difficulty": "medium",
+      "prepTimeMinutes": 60,
+      "baseServings": 8,
+      "ingredients": [
+        { "name": "دقيق أبيض", "amount": 1, "unit": "kilogram" },
+        { "name": "خميرة فورية", "amount": 1, "unit": "tablespoon" },
+        { "name": "سمسم", "amount": 100, "unit": "gram" },
+        { "name": "زيت", "amount": 100, "unit": "milliliter" },
+        { "name": "ماء دافئ", "amount": 400, "unit": "milliliter" }
+      ],
+      "steps": [
+        "اخلط الدقيق مع الخميرة والملح.",
+        "أضف الزيت والماء واعجن حتى ينسج.",
+        "اتركه يختمر إلى يتضاعف.",
+        "شكّل حلقات وصبغها بالسمسم.",
+        "اخبزها بدرجة عالية حتى تنتفخ."
+      ],
+      "createdAt": "2026-02-05T09:00:00Z",
+      "updatedAt": "2026-02-05T09:00:00Z"
+    },
+    {
+      "id": "s14",
+      "title": "قهوة عربية بالهيل",
+      "category": "drink",
+      "difficulty": "easy",
+      "prepTimeMinutes": 10,
+      "baseServings": 6,
+      "ingredients": [
+        { "name": "قهوة عربية مطحونة", "amount": 3, "unit": "tablespoon" },
+        { "name": "هيل", "amount": 1, "unit": "teaspoon" },
+        { "name": "ماء", "amount": 1, "unit": "liter" }
+      ],
+      "steps": [
+        "غلي الماء في الدلة.",
+        "أضف البن تحت الهيل.",
+        "أضف البن مع الهيل.",
+        "قدّمه بالتمر حسب الرغبة."
+      ],
+      "createdAt": "2026-02-07T09:00:00Z",
+      "updatedAt": "2026-02-07T09:00:00Z"
+    },
+    {
+      "id": "s15",
+      "title": "عصير برتقال طازج",
+      "category": "drink",
+      "difficulty": "easy",
+      "prepTimeMinutes": 5,
+      "baseServings": 2,
+      "ingredients": [
+        { "name": "برتقال", "amount": 6, "unit": "piece" },
+        { "name": "سكر", "amount": 1, "unit": "tablespoon" },
+        { "name": "ثلج", "amount": 1, "unit": "cup" }
+      ],
+      "steps": [
+        "عصر البرتقال في العصارة.",
+        "أضف السكر إذا كان حامضًا.",
+        "قدّمه بالثلج مباشرة."
+      ],
+      "createdAt": "2026-02-09T09:00:00Z",
+      "updatedAt": "2026-02-09T09:00:00Z"
+    },
+    {
+      "id": "s16",
+      "title": "أم علي",
+      "category": "dessert",
+      "difficulty": "easy",
+      "prepTimeMinutes": 30,
+      "baseServings": 6,
+      "ingredients": [
+        { "name": "رقائق عجينة", "amount": 300, "unit": "gram" },
+        { "name": "لبن طازج", "amount": 1, "unit": "liter" },
+        { "name": "قشطة", "amount": 200, "unit": "gram" },
+        { "name": "مكسرات مشكلة", "amount": 150, "unit": "gram" },
+        { "name": "سكر", "amount": 100, "unit": "gram" }
+      ],
+      "steps": [
+        "حمّر الرقائق في الفرن حتى تتعقد.",
+        "سخّن اللبن بالسكر.",
+        "صبه على الرقائق فورًا حتى تنلين.",
+        "قدّمها بالقشطة والمكسرات."
+      ],
+      "createdAt": "2026-02-11T09:00:00Z",
+      "updatedAt": "2026-02-11T09:00:00Z"
+    },
+    {
+      "id": "s17",
+      "title": "كنافة بالجبنه",
+      "category": "dessert",
+      "difficulty": "hard",
+      "prepTimeMinutes": 70,
+      "baseServings": 8,
+      "ingredients": [
+        { "name": "كنافة ناعمة", "amount": 500, "unit": "gram" },
+        { "name": "جبنه قريش", "amount": 500, "unit": "gram" },
+        { "name": "سمن بلدي", "amount": 200, "unit": "gram" },
+        { "name": "قطر", "amount": 300, "unit": "milliliter" }
+      ],
+      "steps": [
+        "افرش الكنافة في السمن الذائب.",
+        "صف نصفها في الصينية وسطّها بالجبنه.",
+        "غطها بطبقة الكنافة الثانية.",
+        "اخبزها حتى تصير ذهبية.",
+        "صب القطر الفاتر فوقها فورًا."
+      ],
+      "createdAt": "2026-02-13T09:00:00Z",
+      "updatedAt": "2026-02-13T09:00:00Z"
+    },
+    {
+      "id": "s18",
+      "title": "مهلبية بالفستق",
+      "category": "dessert",
+      "difficulty": "easy",
+      "prepTimeMinutes": 25,
+      "baseServings": 4,
+      "ingredients": [
+        { "name": "حليب", "amount": 1, "unit": "liter" },
+        { "name": "نشا", "amount": 3, "unit": "tablespoon" },
+        { "name": "سكر", "amount": 80, "unit": "gram" },
+        { "name": "فستق حلبي", "amount": 50, "unit": "gram" },
+        { "name": "ماء زهر", "amount": 1, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "أذب النشا في كوب حليب بارد.",
+        "اغلي الباقي مع السكر ثم اسكب النشا تدريجًا.",
+        "حرك حتى تمتد كتلة القوام.",
+        "اسكبه في أكواب وقدّمه باردًا مع الفستق."
+      ],
+      "createdAt": "2026-02-15T09:00:00Z",
+      "updatedAt": "2026-02-15T09:00:00Z"
+    },
+    {
+      "id": "s19",
+      "title": "رز باللبن",
+      "category": "dessert",
+      "difficulty": "medium",
+      "prepTimeMinutes": 40,
+      "baseServings": 5,
+      "ingredients": [
+        { "name": "أرز قصير الحبة", "amount": 150, "unit": "gram" },
+        { "name": "حليب كامل", "amount": 1, "unit": "liter" },
+        { "name": "سكر", "amount": 120, "unit": "gram" },
+        { "name": "ماء ورد", "amount": 1, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "اغسل الأرز وطبخه في ربع الحليب حتى يتليّن.",
+        "أضف باقي الحليب والسكر وحرك بانتظام.",
+        "وصل حتى يتكشف للمقلة.",
+        "أطفئ النار وأضف ماء الورد.",
+        "برّده ثم قدّمه بفستق مبروش."
+      ],
+      "createdAt": "2026-02-17T09:00:00Z",
+      "updatedAt": "2026-02-17T09:00:00Z"
+    },
+    {
+      "id": "s20",
+      "title": "فتة حمص باللحم",
+      "category": "main",
+      "difficulty": "hard",
+      "prepTimeMinutes": 70,
+      "baseServings": 5,
+      "ingredients": [
+        { "name": "حمص مسلوق", "amount": 500, "unit": "gram" },
+        { "name": "خبز محمص مقطع", "amount": 3, "unit": "piece" },
+        { "name": "لحم مطبوخ مقطع", "amount": 400, "unit": "gram" },
+        { "name": "لبن بالثوم", "amount": 400, "unit": "gram" },
+        { "name": "سمن بلدي", "amount": 3, "unit": "tablespoon" }
+      ],
+      "steps": [
+        "صف الخبز المحمص في قاع الطبق.",
+        "أضف طبقة الحمص المسلوق.",
+        "صب اللبن بالثوم ساخنًا.",
+        "ضع اللحم الساخن وأضف ماء السمن حارًا.",
+        "قدّمه فورًا قبل الذوبان."
+      ],
+      "createdAt": "2026-02-19T09:00:00Z",
+      "updatedAt": "2026-02-19T09:00:00Z"
+    }
+  ]
+}
