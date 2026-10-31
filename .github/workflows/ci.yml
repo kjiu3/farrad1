@@ -24,7 +24,7 @@ jobs:
           node-version: '22'
       - name: فحص صياغة Markdown
         run: npx --yes markdownlint-cli "**/*.md"
-        # قواعد التخصيص تُضاف لاحقًا في ملف .markdownlint.yml عند الحاجة
+        # قواعد التخصيص في ملف .markdownlint.yml (راجعها عند إضافة قواعد جديدة)
 
   # فحص الروابط بين ملفات المستودع
   docs-links:
@@ -36,7 +36,6 @@ jobs:
         with:
           args: >-
             --max-retries 2
-            --exclude-mail
             --no-progress
             './**/*.md'
 
