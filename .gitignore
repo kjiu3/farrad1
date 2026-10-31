@@ -1,0 +1,21 @@
+# سرّية: لا يُرفَع أي ملف أسرار
+.env
+.env.*
+*.key
+*.pem
+secrets/
+
+# مشاريع البرمجة العامة
+node_modules/
+build/
+dist/
+out/
+coverage/
+*.log
+
+# بيئات معرفات الذكاء والصياغة العامة
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

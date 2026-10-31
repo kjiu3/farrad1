@@ -1,0 +1,46 @@
+# CI: يُشغَّل على كل Pull Request وعلى الدفع للفرع الرئيسي.
+# المرحلة 0: فحص المستندات فقط. وظائف البناء والاختبار الحقيقية
+# تُفعَّل من المرحلة 1 (هيكل المشروع) وفق ADR-0007 وAGENTS.md.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  # فحص المستندات على ثلاثة أنظمة (لينكس/ويندوز/ماك) تنفيذًا لقاعدة العمل
+  docs-lint:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: فحص صياغة Markdown
+        run: npx --yes markdownlint-cli "**/*.md"
+        # قواعد التخصيص في ملف .markdownlint.yml (راجعها عند إضافة قواعد جديدة)
+
+  # فحص الروابط بين ملفات المستودع
+  docs-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: فحص الروابط
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --max-retries 2
+            --no-progress
+            './**/*.md'
+
+  # ملاحظة صريحة للمستقبل (المرحلة 1): تُستبدل هذه التعليقات بوظائف حقيقية:
+  #   desktop-build: مصفوفة [windows-latest, macos-latest, ubuntu-latest] — بناء + اختبار.
+  #   android-build: ubuntu-latest — بناء APK تجريبي.
+  #   web-build: ubuntu-latest — بناء Flutter Web.
+  # قاعدة: لا PR يُدمج قبل مرور كلها بنجاح (AGENTS.md §1).
