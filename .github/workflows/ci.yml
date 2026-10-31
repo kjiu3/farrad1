@@ -39,7 +39,28 @@ jobs:
             --no-progress
             './**/*.md'
 
-  # ملاحظة صريحة للمستقبل (المرحلة 1): تُستبدل هذه التعليقات بوظائف حقيقية:
+  # اختبارات Flutter على الأنظمة الثلاثة (بداية من المرحلة 1 — فرع stage1/flutter-scaffold)
+  flutter-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: flutter analyze
+        run: flutter analyze
+        working-directory: app
+      - name: flutter test
+        run: flutter test
+        working-directory: app
+
+  # وظائف بناء المشروع الحقيقية (سطح المكتب/أندرويد/ويب) تُدرَج في PR قادم
+  # من المرحلة 1 (`ci/platform-builds`) — وفق خطة Issue #3.
   #   desktop-build: مصفوفة [windows-latest, macos-latest, ubuntu-latest] — بناء + اختبار.
   #   android-build: ubuntu-latest — بناء APK تجريبي.
   #   web-build: ubuntu-latest — بناء Flutter Web.
