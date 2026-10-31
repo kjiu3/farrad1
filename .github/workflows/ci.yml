@@ -59,8 +59,57 @@ jobs:
         run: flutter test
         working-directory: app
 
-  # وظائف البناء الفعلية لكل منصة (زاوية المرحلة 1 رقم 1 في ROADMAP).
-  # مصفوفة include: كل هدف منصة يبني على نظام المستضيف المطلوب.
+  # فحص migration SQL على PostgreSQL من الصفر (service container — ubuntu only،
+  # because القاعدة لا تتغير بحسب نظام التشغيل). يغطي معيار Stage 2 رقم 3.
+  db-migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: farrad
+          POSTGRES_PASSWORD: farrad
+          POSTGRES_DB: farrad
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U farrad -d farrad"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: تثبيت عميل PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: انتظار الجاهزية
+        env:
+          PGPASSWORD: farrad
+        run: |
+          for i in $(seq 1 30); do
+            pg_isready -h localhost -p 5432 -U farrad && exit 0
+            sleep 2
+          done
+          exit 1
+      - name: تطبيق المخططات من الصفر
+        env:
+          PGPASSWORD: farrad
+        run: |
+          for f in db/migrations/*.sql; do
+            echo "applying $f"
+            psql -h localhost -p 5432 -U farrad -d farrad -v ON_ERROR_STOP=1 -f "$f"
+          done
+      - name: تأكيدات القيود (assertions)
+        env:
+          PGPASSWORD: farrad
+        run: |
+          psql -h localhost -p 5432 -U farrad -d farrad -v ON_ERROR_STOP=1 -f db/tests/schema_assertions.sql
+      - name: idempotency — إعادة تطبيق المخططات لا تفشل
+        env:
+          PGPASSWORD: farrad
+        run: |
+          for f in db/migrations/*.sql; do
+            psql -h localhost -p 5432 -U farrad -d farrad -v ON_ERROR_STOP=1 -f "$f"
+          done
   platform-build:
     strategy:
       fail-fast: false
