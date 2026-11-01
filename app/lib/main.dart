@@ -34,8 +34,11 @@ class _FarradAppState extends State<FarradApp> {
     RecipeRepository repo;
     try {
       repo = SharedPreferencesRecipeRepository(seed: seed);
-      await repo.list(); // trigger init; if it hangs, future never completes (handled by caller's timeout)
+      await repo.list(); // إثارة تحميل SharedPreferences وتحميل الكاش مبكرًا.
     } catch (_) {
+      // فشل التخزين (نفي على منصة/إذن مفقود): نسقط إلى الذاكرة كي لا يتعطل
+      // التطبيق — تعديلات الجلسة لن تُحفظ. تنبيه المستخدم المرئي مُبطَّل
+      // إلى حين وجود آلية عرض موثوقة، والعينة تبقى للقراءة فقط.
       repo = InMemoryRecipeRepository(seed);
     }
     if (!mounted) return;

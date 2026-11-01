@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/recipe_repository.dart';
+import '../l10n.dart';
 import '../models/recipe.dart';
 import '../models/units.dart';
 import '../ui/recipe_form_screen.dart';
@@ -13,7 +14,7 @@ class RecipeDetailScreen extends StatefulWidget {
     required this.recipeId,
   });
 
-  final dynamic strings;
+  final AppStrings strings;
   final RecipeRepository repository;
   final String recipeId;
 
@@ -25,7 +26,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Recipe? _recipe;
   bool _loading = true;
 
-  String _s(String key) => widget.strings.get(key) as String;
+  String _s(String key) => widget.strings.get(key);
 
   @override
   void initState() {
