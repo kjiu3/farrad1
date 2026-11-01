@@ -1,0 +1,97 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:farrad/data/recipe_repository.dart';
+import 'package:farrad/data/sample_recipes_loader.dart';
+import 'package:farrad/l10n.dart';
+import 'package:farrad/ui/search_screen.dart';
+
+/// معيار المرحلة 2 رقم 2 (الحفظ) ورقم 3 (المدخلات المتطرفة) — واجهة.
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  late AppStrings strings;
+  late InMemoryRecipeRepository repo;
+
+  setUp(() async {
+    strings = await AppStrings.load('ar');
+    final seed = await SampleRecipeLoader.load();
+    repo = InMemoryRecipeRepository(seed);
+  });
+
+  Future<void> pumpSearch(WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      locale: const Locale('ar'),
+      home: SearchScreen(strings: strings, repository: repo),
+    ));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('البحث يعرض نتائج ويُفلتر بالنص', (tester) async {
+    await pumpSearch(tester);
+    // أول نتيجة مرئية في القائمة (الأحدث أولًا).
+    expect(find.text('فتة حمص باللحم'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).first, 'كبسة');
+    await tester.pumpAndSettle();
+    expect(find.byType(ListTile), findsOneWidget);
+    expect(find.text('كبسة دجاج بالبهارات'), findsOneWidget);
+  });
+
+  testWidgets('فلتر التصنيف (مشروبات) يعيد 2', (tester) async {
+    await pumpSearch(tester);
+    await tester.tap(find.text('الكل').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('مشروبات').last);
+    await tester.pumpAndSettle();
+    expect(find.byType(ListTile), findsNWidgets(2));
+  });
+
+  testWidgets('إنشاء وصفة ثم حفظها يُظهرها في النتائج (معيار 2)', (tester) async {
+    await pumpSearch(tester);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    final fields = find.byType(TextField);
+    await tester.enterText(fields.at(0), 'وصفة اختبار الحفظ');
+    await tester.enterText(fields.at(1), '15');
+    await tester.enterText(fields.at(2), '2');
+    await tester.enterText(fields.at(3), 'ملح');
+    await tester.enterText(fields.at(4), '1');
+    await tester.enterText(fields.at(5), 'امزج الملح بالماء');
+
+    await tester.drag(find.byType(ListView), const Offset(0, -700));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(strings.get('saveRecipe')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('وصفة اختبار الحفظ'), findsOneWidget);
+    final list = await repo.list();
+    expect(list.map((r) => r.title), contains('وصفة اختبار الحفظ'));
+  });
+
+  testWidgets('مدخل متطرف (عنوان 4000 حرف) يُظهر خطأ ولا يُجهاض (معيار 3)', (tester) async {
+    await pumpSearch(tester);
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+
+    final fields = find.byType(TextField);
+    await tester.enterText(fields.at(0), 'ط' * 4000);
+    await tester.enterText(fields.at(1), '15');
+    await tester.enterText(fields.at(2), '2');
+    await tester.enterText(fields.at(3), 'ملح');
+    await tester.enterText(fields.at(4), '1');
+    await tester.enterText(fields.at(5), 'خطوة');
+
+    await tester.drag(find.byType(ListView), const Offset(0, -700));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(strings.get('saveRecipe')));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView), const Offset(0, 700));
+    await tester.pumpAndSettle();
+
+    expect(find.text(strings.get('validation_titleEmpty')), findsWidgets);
+  });
+}
