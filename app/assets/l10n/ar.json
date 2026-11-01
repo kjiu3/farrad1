@@ -47,6 +47,7 @@
   "unit_teaspoon": "ملعقة صغيرة",
   "unit_piece": "حبة",
   "validation_titleEmpty": "العنوان مطلوب",
+  "validation_titleTooLong": "العنوان طويل جدًا — الحد 500 حرفًا",
   "validation_amountInvalid": "الكمية يجب أن تكون موجبة",
   "validation_unitUnknown": "وحدة غير معروفة",
   "validation_ingredientNameEmpty": "اسم المكوّن مطلوب",

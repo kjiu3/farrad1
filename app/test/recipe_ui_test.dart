@@ -71,13 +71,14 @@ void main() {
     expect(list.map((r) => r.title), contains('وصفة اختبار الحفظ'));
   });
 
-  testWidgets('مدخل متطرف (عنوان 4000 حرف) يُظهر خطأ ولا يُجهاض (معيار 3)', (tester) async {
+  testWidgets('مدخل متطرف (عنوان 4000 حرف) يُقصُّ إلى 500 ولا يُجهاض (معيار 3)', (tester) async {
     await pumpSearch(tester);
 
     await tester.tap(find.byIcon(Icons.add));
     await tester.pumpAndSettle();
 
     final fields = find.byType(TextField);
+    // كتابة 4000 حرفًا: حدّ الحقل 500 يُقصّه قبل التحقق — مطابقة لحدّ القاعدة.
     await tester.enterText(fields.at(0), 'ط' * 4000);
     await tester.enterText(fields.at(1), '15');
     await tester.enterText(fields.at(2), '2');
@@ -89,9 +90,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(strings.get('saveRecipe')));
     await tester.pumpAndSettle();
-    await tester.drag(find.byType(ListView), const Offset(0, 700));
-    await tester.pumpAndSettle();
 
-    expect(find.text(strings.get('validation_titleEmpty')), findsWidgets);
+    // لا انكسار: الحفظ نجح، ووصفة بعنوان مُقصّ إلى 500 حرفًا في المستودع.
+    final list = await repo.list();
+    final titles = list.map((r) => r.title).where((t) => t.length > 1 && t.startsWith('ط'));
+    expect(titles, isNotEmpty);
+    expect(titles.first.length, lessThanOrEqualTo(500));
   });
 }

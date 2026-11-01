@@ -149,7 +149,9 @@ void main() {
         steps: ['س' * 4000],
       );
       final errors = RecipeValidator.validate(patch);
-      expect(errors, contains(ValidationError.titleEmpty));
+      // عنوان 4000 حرف: يقفز حدّ الطول لا الفراغ — رسالتان مختلفتان مقصودتان.
+      expect(errors, contains(ValidationError.titleTooLong));
+      expect(errors, isNot(contains(ValidationError.titleEmpty)));
       // العناصر الحديّة (كمية موجبة صغيرة) مقبولة تقنيًا وتُخزَّن أمنًا.
       expect(errors, isNot(contains(ValidationError.amountInvalid)));
     });
@@ -179,6 +181,28 @@ void main() {
       );
       final errors = RecipeValidator.validate(patch);
       expect(errors, containsAll([ValidationError.prepTimeInvalid, ValidationError.servingsInvalid]));
+    });
+
+    test('حدّ طول العنوان: 500 حرف تُقبَل و501 تُرفَض بـ titleTooLong', () {
+      final ok = RecipePatch(
+        title: 'ط' * 500,
+        prepTimeMinutes: 10,
+        baseServings: 2,
+        ingredients: [const Ingredient(name: 'مكون', amount: 1, unit: RecipeUnit.gram)],
+        steps: ['خطوة'],
+      );
+      expect(RecipeValidator.validate(ok), isEmpty);
+
+      final over = RecipePatch(
+        title: 'ط' * 501,
+        prepTimeMinutes: 10,
+        baseServings: 2,
+        ingredients: [const Ingredient(name: 'مكون', amount: 1, unit: RecipeUnit.gram)],
+        steps: ['خطوة'],
+      );
+      final errors = RecipeValidator.validate(over);
+      expect(errors, contains(ValidationError.titleTooLong));
+      expect(errors, isNot(contains(ValidationError.titleEmpty)));
     });
   });
 }

@@ -47,6 +47,7 @@
   "unit_teaspoon": "teaspoon",
   "unit_piece": "piece",
   "validation_titleEmpty": "Title is required",
+  "validation_titleTooLong": "Title is too long — limit is 500 characters",
   "validation_amountInvalid": "Amount must be positive",
   "validation_unitUnknown": "Unknown unit",
   "validation_ingredientNameEmpty": "Ingredient name is required",
