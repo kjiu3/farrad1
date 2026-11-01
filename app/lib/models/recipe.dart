@@ -174,6 +174,7 @@ class Recipe {
 /// أخطاء التحقق (رموز ثابتة تُقابلها نصوص الترجمة في ar.json/en.json).
 enum ValidationError {
   titleEmpty('validation_titleEmpty'),
+  titleTooLong('validation_titleTooLong'),
   amountInvalid('validation_amountInvalid'),
   unitUnknown('validation_unitUnknown'),
   ingredientNameEmpty('validation_ingredientNameEmpty'),
@@ -216,10 +217,11 @@ class RecipeValidator {
 
     final title = patch.title?.trim();
     if (title == null || title.isEmpty) errors.add(ValidationError.titleEmpty);
-    // حد أقصى حماية من مدخلات متطرفة (فق ROADMAP المرحلة 2 معيار 3) —
-    // نص طويل لا يكسر الواجهة لكنه يُرفَض كطبق عنوان؛ الحد مبالغ فيه عمدًا.
+    // حد أقصى حفظ من المدخلات المتطرفة (فق ROADMAP المرحلة 2 معيار 3) —
+    // نفس حدّ قاعدة PostgreSQL (recipes.title ≤ 500)، برسالة واضحة
+    // تفرّق عن «العنوان مطلوب».
     if (title != null && title.length > 500) {
-      errors.add(ValidationError.titleEmpty);
+      errors.add(ValidationError.titleTooLong);
     }
 
     if (patch.prepTimeMinutes != null && patch.prepTimeMinutes! <= 0) {

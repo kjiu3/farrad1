@@ -155,7 +155,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
           TextField(
             controller: _titleController,
             decoration: InputDecoration(labelText: _s('recipeTitle')),
-            maxLength: 5000,
+            maxLength: 500,
           ),
           const SizedBox(height: 8),
           DropdownButtonFormField<RecipeCategory>(
