@@ -97,4 +97,31 @@ void main() {
     expect(titles, isNotEmpty);
     expect(titles.first.length, lessThanOrEqualTo(500));
   });
+
+  testWidgets('الحذف يتطلب تأكيدًا: الإلغاء يحفظ الوصفة والتأكيد يحذفها', (tester) async {
+    await pumpSearch(tester);
+
+    // افتح أول وصفة (فتة حمص باللحم — أول نتيجة).
+    await tester.tap(find.text('فتة حمص باللحم'));
+    await tester.pumpAndSettle();
+
+    // اضغط زر الحذف → يظهر حوار تأكيد.
+    await tester.tap(find.byIcon(Icons.delete));
+    await tester.pumpAndSettle();
+    expect(find.text(strings.get('deleteConfirmTitle')), findsOneWidget);
+
+    // الإلغاء: لا حذف — الوصفة ما زالت في المستودع.
+    await tester.tap(find.text(strings.get('deleteConfirmNo')));
+    await tester.pumpAndSettle();
+    expect((await repo.list()).map((r) => r.title), contains('فتة حمص باللحم'));
+
+    // التأكيد: حذف فعلي والوصفة تغيب عن المستودع وفي القائمة.
+    await tester.tap(find.byIcon(Icons.delete));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(strings.get('deleteConfirmYes')));
+    await tester.pumpAndSettle();
+
+    expect((await repo.list()).map((r) => r.title), isNot(contains('فتة حمص باللحم')));
+    expect(find.text('فتة حمص باللحم'), findsNothing);
+  });
 }
