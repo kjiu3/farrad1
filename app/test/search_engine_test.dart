@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:farrad/data/sample_recipes_loader.dart';
 import 'package:farrad/models/recipe.dart';
+import 'package:farrad/models/units.dart';
 import 'package:farrad/search/search_engine.dart';
 
 /// معيار المرحلة 2 رقم 1: اختبارات بحث على 20 وصفة نموذجية.
@@ -180,6 +181,36 @@ void main() {
       // فتة حمص باللحم: «اللحم» في عنوانها (6) + مكون (2) + خطوة (1).
       // كفتة بالصينية: «لحم» في مكونها (2) فقط — ترتيب أقل.
       expect(result.recipes.first.title, 'فتة حمص باللحم');
+    });
+
+    test('تعادل الدرجة ينصرف للأحدث (updatedAt) — قاعدة موثقة وغير مختبرة سابقًا', () {
+      // وصفات اصطناعية بشدة متساوية: «نملة» في مكوّن كل واحدة (2) فقط —
+      // بلا إصابة عنوان أو خطوة. التفاضل الوحيد إذن: الأحدث أولًا.
+      Recipe tie(String id, String title, DateTime stamp) => Recipe(
+            id: id,
+            title: title,
+            category: RecipeCategory.main,
+            difficulty: RecipeDifficulty.easy,
+            prepTimeMinutes: 10,
+            baseServings: 1,
+            ingredients: const [
+              Ingredient(name: 'نملة', amount: 1, unit: RecipeUnit.gram),
+            ],
+            steps: const ['خطوة'],
+            createdAt: stamp,
+            updatedAt: stamp,
+          );
+
+      final older = tie('tie-old', 'عنوان قديم', DateTime.utc(2026, 1, 1));
+      final newer = tie('tie-new', 'عنوان جديد', DateTime.utc(2026, 5, 1));
+
+      final result = const SearchEngine().search(
+        [older, newer],
+        const RecipeQuery(text: 'نملة'),
+      );
+      expect(result.recipes.length, 2);
+      expect(result.recipes.first.id, 'tie-new'); // الأحدث قبل الأقدم.
+      expect(result.recipes.last.id, 'tie-old');
     });
   });
 }
