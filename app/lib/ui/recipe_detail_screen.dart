@@ -79,6 +79,25 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
+              // الحذف لا يتم إلا بعد تأكيد — نقرة واحدة لا تُلغي بيانات.
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (dialogContext) => AlertDialog(
+                  title: Text(_s('deleteConfirmTitle')),
+                  content: Text(_s('deleteConfirmBody')),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(dialogContext).pop(false),
+                      child: Text(_s('deleteConfirmNo')),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.of(dialogContext).pop(true),
+                      child: Text(_s('deleteConfirmYes')),
+                    ),
+                  ],
+                ),
+              );
+              if (confirmed != true) return;
               await widget.repository.delete(r.id);
               if (context.mounted) Navigator.of(context).pop();
             },
