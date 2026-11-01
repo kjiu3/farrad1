@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'data/recipe_repository.dart';
+import 'data/sample_recipes_loader.dart';
 import 'l10n.dart';
+import 'models/recipe.dart';
+import 'ui/search_screen.dart';
 
 void main() => runApp(const FarradApp());
 
@@ -16,6 +20,30 @@ class FarradApp extends StatefulWidget {
 
 class _FarradAppState extends State<FarradApp> {
   String _language = AppStrings.defaultLanguage;
+  List<Recipe>? _seed;
+  RecipeRepository? _repository;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSeed();
+  }
+
+  Future<void> _loadSeed() async {
+    final seed = await SampleRecipeLoader.load();
+    RecipeRepository repo;
+    try {
+      repo = SharedPreferencesRecipeRepository(seed: seed);
+      await repo.list(); // trigger init; if it hangs, future never completes (handled by caller's timeout)
+    } catch (_) {
+      repo = InMemoryRecipeRepository(seed);
+    }
+    if (!mounted) return;
+    setState(() {
+      _seed = seed;
+      _repository = repo;
+    });
+  }
 
   void _switchLanguage() {
     setState(() {
@@ -25,77 +53,30 @@ class _FarradAppState extends State<FarradApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Farrad',
-      debugShowCheckedModeBanner: false,
-      locale: Locale(_language),
-      supportedLocales: const [Locale('ar'), Locale('en')],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      home: ExperimentHome(
-        language: _language,
-        onToggleLanguage: _switchLanguage,
-      ),
-    );
-  }
-}
-
-/// شاشة تجريبية للمرحلة 1 فقط: تثبت أن النصوص تعمل من ملفات الترجمة،
-/// وأن الاتجاه RTL يعمل، وأن التبديل ع/EN فوري دون انكسار في الواجهة.
-class ExperimentHome extends StatelessWidget {
-  const ExperimentHome({
-    super.key,
-    required this.language,
-    required this.onToggleLanguage,
-  });
-
-  final String language;
-  final VoidCallback onToggleLanguage;
-
-  @override
-  Widget build(BuildContext context) {
     return FutureBuilder<AppStrings>(
-      future: AppStrings.load(language),
+      future: AppStrings.load(_language),
       builder: (context, snapshot) {
-        final strings = snapshot.data;
-        if (strings == null) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+        if (!snapshot.hasData || _seed == null || _repository == null) {
+          return const MaterialApp(
+            home: Scaffold(body: Center(child: Text('...'))),
           );
         }
-        // وجهة الزر تُعرض باسم اللغة المُراد التبديل إليها بلغتها الأصلية، والاسم نفسه من ملف الترجمة.
-        final destination = strings.get('otherLanguage');
-        return Scaffold(
-          appBar: AppBar(title: Text(strings.get('appTitle'))),
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    strings.get('appTitle'),
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(strings.get('welcome'), textAlign: TextAlign.center),
-                  const SizedBox(height: 8),
-                  Text(
-                    strings.get('experimentNote'),
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton(
-                    onPressed: onToggleLanguage,
-                    child: Text(destination),
-                  ),
-                ],
-              ),
-            ),
+        final strings = snapshot.data!;
+        return MaterialApp(
+          title: 'Farrad',
+          debugShowCheckedModeBanner: false,
+          locale: Locale(_language),
+          supportedLocales: const [Locale('ar'), Locale('en')],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          home: SearchScreen(
+            strings: strings,
+            repository: _repository!,
+            onToggleLanguage: _switchLanguage,
+            otherLanguageLabel: strings.get('otherLanguage'),
           ),
         );
       },
