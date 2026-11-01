@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/recipe_repository.dart';
+import '../l10n.dart';
 import '../models/recipe.dart';
 import '../models/units.dart';
 
@@ -12,7 +13,7 @@ class RecipeFormScreen extends StatefulWidget {
     this.initial,
   });
 
-  final dynamic strings;
+  final AppStrings strings;
   final RecipeRepository repository;
   final Recipe? initial;
 
@@ -34,7 +35,7 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
   List<String> _errors = const [];
   bool _saving = false;
 
-  String _s(String key) => widget.strings.get(key) as String;
+  String _s(String key) => widget.strings.get(key);
 
   @override
   void initState() {
@@ -124,8 +125,9 @@ class _RecipeFormScreenState extends State<RecipeFormScreen> {
       updatedAt: now,
     );
     await widget.repository.save(recipe);
+    // لا setState بعد pop: انتهى دور الشاشة، والزر محجوب بـ _saving حتى هنا فلا
+    // حاجة لإعادة تدويره. الحماية mounted فوق pop تمنع أي دعوة على شاشة راحلة.
     if (mounted) Navigator.of(context).pop(true);
-    setState(() => _saving = false);
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/recipe_repository.dart';
+import '../l10n.dart';
 import '../models/recipe.dart';
 import '../search/search_engine.dart';
 import '../ui/recipe_detail_screen.dart';
@@ -17,7 +18,7 @@ class SearchScreen extends StatefulWidget {
     this.otherLanguageLabel,
   });
 
-  final dynamic strings; // AppStrings — dynamic لتجنب import تبعية دائرية.
+  final AppStrings strings; // من l10n.dart — نوع ثابت لا dynamic.
   final RecipeRepository repository;
   final SearchEngine engine;
   final VoidCallback? onToggleLanguage;
@@ -65,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() => _results = result.recipes);
   }
 
-  String _s(String key) => widget.strings.get(key) as String;
+  String _s(String key) => widget.strings.get(key);
 
   @override
   void dispose() {
