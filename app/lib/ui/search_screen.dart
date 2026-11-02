@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../auth/auth_service.dart';
 import '../data/recipe_repository.dart';
 import '../l10n.dart';
 import '../models/recipe.dart';
 import '../search/search_engine.dart';
+import '../supabase/app_backend.dart';
+import '../ui/auth_screen.dart';
 import '../ui/recipe_detail_screen.dart';
 import '../ui/recipe_form_screen.dart';
 
@@ -16,6 +19,7 @@ class SearchScreen extends StatefulWidget {
     this.engine = const SearchEngine(),
     this.onToggleLanguage,
     this.otherLanguageLabel,
+    this.authService = const SupabaseAuthService(),
   });
 
   final AppStrings strings; // من l10n.dart — نوع ثابت لا dynamic.
@@ -23,6 +27,7 @@ class SearchScreen extends StatefulWidget {
   final SearchEngine engine;
   final VoidCallback? onToggleLanguage;
   final String? otherLanguageLabel;
+  final AuthService authService; // حقن للاختبار — الإنتاج عبر Supabase.
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -86,10 +91,49 @@ class _SearchScreenState extends State<SearchScreen> {
               onPressed: widget.onToggleLanguage,
               child: Text(widget.otherLanguageLabel ?? ''),
             ),
+          IconButton(
+            key: const Key('auth_open'),
+            icon: const Icon(Icons.person_outline),
+            tooltip: _s('authSignIn'),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => AuthScreen(
+                    strings: widget.strings,
+                    service: widget.authService,
+                  ),
+                ),
+              );
+              // الجلسة قد تغيّرت (دخول/خروج/انتهاء) — أعد بناء البانر.
+              if (mounted) setState(() {});
+            },
+          ),
         ],
       ),
       body: Column(
         children: [
+          // بانر الوضع المحلي (فق ADR-0009 §2): يظهر فقط حين لا
+          // تُهيَّأ الخلفية — يخبر المستخدم بلغة واضحة لماذا يغيب
+          // الحساب والتعليق بدل ظهورهما مكسورين أو صامتين.
+          if (!AppBackend.instance.configured)
+            Material(
+              key: const Key('local_mode_banner'),
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              child: SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    _s('localModeBanner'),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.all(12),
             child: TextField(
