@@ -231,6 +231,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       strings: widget.strings,
                                       repository: widget.repository,
                                       recipeId: r.id,
+                                      authService: widget.authService,
                                     ),
                                   ),
                                 );
