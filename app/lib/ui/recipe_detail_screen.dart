@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../auth/auth_service.dart';
 import '../community/comment_service.dart';
+import '../community/rating_service.dart';
 import '../data/recipe_repository.dart';
 import '../l10n.dart';
 import '../models/recipe.dart';
@@ -15,6 +16,7 @@ class RecipeDetailScreen extends StatefulWidget {
     required this.repository,
     required this.recipeId,
     this.commentService = const SupabaseCommentService(),
+    this.ratingService = const SupabaseRatingService(),
     this.authService = const SupabaseAuthService(),
   });
 
@@ -25,6 +27,7 @@ class RecipeDetailScreen extends StatefulWidget {
   /// الخلفية غير مهيأة — SupabaseCommentService يعيد قائمة فاضية
   /// ويمنع النشر بلا مفاتيح (فق ADR-0009 §2).
   final CommentService commentService;
+  final RatingService ratingService;
   final AuthService authService;
 
   @override
@@ -34,6 +37,11 @@ class RecipeDetailScreen extends StatefulWidget {
 class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Recipe? _recipe;
   bool _loading = true;
+
+  int? _myRating;
+  RatingSummary? _ratingSummary;
+  bool _ratingBusy = false;
+  String? _ratingErrorKey;
 
   List<RecipeComment> _comments = const <RecipeComment>[];
   bool _commentsLoading = true;
@@ -48,6 +56,46 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     super.initState();
     _load();
     _loadComments();
+    _loadRating();
+  }
+
+  Future<void> _loadRating() async {
+    final scores = await widget.ratingService.listScores(widget.recipeId);
+    if (!mounted) return;
+    final my = await widget.ratingService.getMyRating(widget.recipeId);
+    if (!mounted) return;
+    setState(() {
+      _ratingSummary = RatingSummary.fromScores(scores);
+      _myRating = my;
+    });
+  }
+
+  Future<void> _rate(int score) async {
+    if (_ratingBusy) return;
+    setState(() {
+      _ratingErrorKey = null;
+    });
+    if (widget.authService.userId == null) {
+      setState(() => _ratingErrorKey = 'ratingRequireAuth');
+      return;
+    }
+    setState(() => _ratingBusy = true);
+    final outcome = await widget.ratingService.rate(widget.recipeId, score);
+    if (!mounted) return;
+    if (outcome.ok) {
+      setState(() {
+        _ratingBusy = false;
+        _myRating = score;
+      });
+      // تحديث الملخص مع الدرجة الجديدة دون إعادة قراءة الشبكة —
+      // نفس منطق fromScores المختبر، إضافة درجة واحدة فلا اتساع.
+      await _loadRating();
+      return;
+    }
+    setState(() {
+      _ratingBusy = false;
+      _ratingErrorKey = outcome.errorKey ?? 'ratingFailed';
+    });
   }
 
   Future<void> _loadComments() async {
@@ -215,6 +263,43 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               ),
           const SizedBox(height: 16),
           Text(
+            _s('ratingTitle'),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          Row(
+            children: [
+              for (var s = 1; s <= 5; s++)
+                IconButton(
+                  key: Key('rating_star_$s'),
+                  onPressed: _ratingBusy ? null : () => _rate(s),
+                  icon: Icon(
+                    (_myRating != null && s <= _myRating!)
+                        ? Icons.star
+                        : Icons.star_border,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 28,
+                  ),
+                ),
+              const SizedBox(width: 8),
+              Text(
+                key: const Key('rating_summary'),
+                _summaryText(context),
+              ),
+            ],
+          ),
+          if (_ratingErrorKey != null)
+            Padding(
+              key: const Key('rating_error'),
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                _s(_ratingErrorKey!),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            ),
+          const SizedBox(height: 16),
+          Text(
             _s('commentsTitle'),
             style: Theme.of(context).textTheme.titleMedium,
           ),
@@ -273,4 +358,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   String _unitLabel(RecipeUnit u) => _s('unit_${u.slug}');
+
+  /// صيغة الملخص: متوسط من رقم واحد + عدّاد. بلا تقييمات: نص
+  /// «بلا تقييم بعد» من الترجمة لا رقم كاذب.
+  String _summaryText(BuildContext context) {
+    final s = _ratingSummary;
+    if (s == null || s.count == 0) return _s('ratingNone');
+    return '${s.average!.toStringAsFixed(1)} ★ (${s.count})';
+  }
 }
