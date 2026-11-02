@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../auth/auth_service.dart';
+import '../community/comment_service.dart';
 import '../data/recipe_repository.dart';
 import '../l10n.dart';
 import '../models/recipe.dart';
@@ -12,11 +14,18 @@ class RecipeDetailScreen extends StatefulWidget {
     required this.strings,
     required this.repository,
     required this.recipeId,
+    this.commentService = const SupabaseCommentService(),
+    this.authService = const SupabaseAuthService(),
   });
 
   final AppStrings strings;
   final RecipeRepository repository;
   final String recipeId;
+  /// الحقن للاختبار (AGENTS §2.1). الافتراضي لا يلمس الشبكة ما دامت
+  /// الخلفية غير مهيأة — SupabaseCommentService يعيد قائمة فاضية
+  /// ويمنع النشر بلا مفاتيح (فق ADR-0009 §2).
+  final CommentService commentService;
+  final AuthService authService;
 
   @override
   State<RecipeDetailScreen> createState() => _RecipeDetailScreenState();
@@ -26,12 +35,63 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Recipe? _recipe;
   bool _loading = true;
 
+  List<RecipeComment> _comments = const <RecipeComment>[];
+  bool _commentsLoading = true;
+  final TextEditingController _commentController = TextEditingController();
+  bool _commentBusy = false;
+  String? _commentErrorKey;
+
   String _s(String key) => widget.strings.get(key);
 
   @override
   void initState() {
     super.initState();
     _load();
+    _loadComments();
+  }
+
+  Future<void> _loadComments() async {
+    final comments = await widget.commentService.list(widget.recipeId);
+    if (!mounted) return;
+    setState(() {
+      _comments = comments;
+      _commentsLoading = false;
+    });
+  }
+
+  Future<void> _submitComment() async {
+    if (_commentBusy) return;
+    final body = _commentController.text.trim();
+    setState(() => _commentErrorKey = null);
+    if (body.isEmpty) {
+      setState(() => _commentErrorKey = 'commentEmptyInput');
+      return;
+    }
+    if (widget.authService.userId == null) {
+      setState(() => _commentErrorKey = 'commentRequireAuth');
+      return;
+    }
+    setState(() => _commentBusy = true);
+    final outcome = await widget.commentService.add(widget.recipeId, body);
+    if (!mounted) return;
+    if (outcome.ok) {
+      setState(() {
+        _commentBusy = false;
+        _commentController.clear();
+      });
+      await _loadComments();
+      return;
+    }
+    setState(() {
+      _commentBusy = false;
+      _commentErrorKey = outcome.errorKey ?? 'commentFailed';
+    });
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -153,6 +213,60 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   title: Text(e.value),
                 ),
               ),
+          const SizedBox(height: 16),
+          Text(
+            _s('commentsTitle'),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          if (_commentsLoading)
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            )
+          else if (_comments.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                key: const Key('comments_empty'),
+                _s('commentEmpty'),
+              ),
+            )
+          else
+            ..._comments.map(
+              (c) => ListTile(
+                key: Key('comment_${c.id}'),
+                dense: true,
+                title: Text(c.body),
+              ),
+            ),
+          TextField(
+            key: const Key('comment_input'),
+            controller: _commentController,
+            maxLength: 1000, // حد المخطط نفسه (recipe_comments.body)
+            decoration: InputDecoration(
+              hintText: _s('commentHint'),
+            ),
+          ),
+          if (_commentErrorKey != null)
+            Padding(
+              key: const Key('comment_error'),
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                _s(_commentErrorKey!),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          const SizedBox(height: 8),
+          FilledButton.icon(
+            key: const Key('comment_send'),
+            onPressed: _commentBusy ? null : _submitComment,
+            icon: const Icon(Icons.send),
+            label: Text(_s('commentSend')),
+          ),
         ],
       ),
     );
