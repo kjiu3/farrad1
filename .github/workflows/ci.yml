@@ -102,7 +102,10 @@ jobs:
         env:
           PGPASSWORD: farrad
         run: |
-          psql -h localhost -p 5432 -U farrad -d farrad -v ON_ERROR_STOP=1 -f db/tests/schema_assertions.sql
+          for f in db/tests/*.sql; do
+            echo "asserting $f"
+            psql -h localhost -p 5432 -U farrad -d farrad -v ON_ERROR_STOP=1 -f "$f"
+          done
       - name: idempotency — إعادة تطبيق المخططات لا تفشل
         env:
           PGPASSWORD: farrad
