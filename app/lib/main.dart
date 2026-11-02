@@ -5,9 +5,17 @@ import 'data/recipe_repository.dart';
 import 'data/sample_recipes_loader.dart';
 import 'l10n.dart';
 import 'models/recipe.dart';
+import 'supabase/app_backend.dart';
 import 'ui/search_screen.dart';
 
-void main() => runApp(const FarradApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // الاتصال الحي إن توفرت متغيرات البيئة، وإلا وضع محلي خالص
+  // كما في المرحلة 2 (فق ADR-0009 §2). لا بانر هنا — يرسمه PR
+  // واجهة الحسابات (P3-4) في مكانها الظاهر.
+  await AppBackend.init();
+  runApp(const FarradApp());
+}
 
 /// الجذر كما في ADR-0002: العربية افتراضية (RTL)، لكل نص من ملفات الترجمة،
 /// والاتجاه ينتج تلقائيًا من اللغة. التبديل بين اللغتين فوري من الشاشة.
